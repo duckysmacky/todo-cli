@@ -4,49 +4,21 @@ use colored::*;
 
 use crate::todo::TodoItem;
 
-pub fn ok(text: &str) {
-    println!("\n{}\n", text.green());
-}
+pub fn ok(text: &str) { println!("\n{}\n", text.green()); }
 
-pub fn output(text: &str) {
-    println!("\n{}\n", text.bright_cyan());
-}
+pub fn err(text: &str) { println!("\n{}\n", text.red()); }
 
-pub fn err(text: &str) {
-    println!("\n{}\n", text.red());
-}
+pub fn title(text: &str) { println!("{}", text.blue()); }
 
-pub fn title(text: &str) {
-    println!("{}", text.blue());
-}
+pub fn output(text: &str) { println!("\n{}\n", text.bright_cyan()); }
 
-pub fn added(element: &str) {
-    println!("\n{}\n",
-        format!(
-            "(+) {} added", element
-        ).bright_green()
-    );
-}
+pub fn added(element: &str) { println!("\n{}\n", format!("(+) {} added", element).bright_green()); }
 
-pub fn removed(element: &str) {
-    println!("\n{}\n",
-        format!(
-            "(-) {} removed", element
-        ).bright_red()
-    );
-}
+pub fn removed(element: &str) { println!("\n{}\n", format!("(-) {} removed", element).bright_red()); }
 
-pub fn info(text: &str) {
-    println!("\n{}",
-        format!(
-            "(?) {}", text
-        ).bright_blue()
-    );
-}
+pub fn info(text: &str) { println!("\n{}", format!("(?) {}", text).bright_blue()); }
 
-pub fn list(text: &str) {
-    println!("• {}", text.bright_black());
-}
+pub fn list(text: &str) { println!("• {}", text.bright_black()); }
 
 pub fn list_item(index: usize, item: &TodoItem) {
     println!("{}", 

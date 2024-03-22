@@ -1,13 +1,12 @@
 use std::fs::File;
 use std::io::{BufReader, Write};
 use serde::{Deserialize, Serialize};
-
 use crate::out;
 
-static FILE_PATH: &str = "./todos.json";
+const FILE_PATH: &str = "./todos.json";
 
 #[allow(unused)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TodoItem {
     pub title: String,
     pub description: String,
@@ -50,7 +49,7 @@ pub fn new_todo(title: &str, description: &str) {
     let file = get_file();
 
     let mut todos = get_todos(file);
-    todos.push(new_todo.clone());
+    todos.push(new_todo);
 
     let file = File::create(FILE_PATH).unwrap();
     write_todos(file, todos);
