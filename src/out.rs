@@ -2,20 +2,18 @@
 
 use colored::*;
 
+use crate::todo::TodoItem;
+
 pub fn ok(text: &str) {
-    println!("{}", text.green());
+    println!("\n{}\n", text.green());
 }
 
 pub fn output(text: &str) {
-    println!("{}", text.bright_cyan());
-}
-
-pub fn info(text: &str) {
-    println!("{}", text.blue());
+    println!("\n{}\n", text.bright_cyan());
 }
 
 pub fn err(text: &str) {
-    println!("{}", text.red());
+    println!("\n{}\n", text.red());
 }
 
 pub fn title(text: &str) {
@@ -23,17 +21,48 @@ pub fn title(text: &str) {
 }
 
 pub fn added(element: &str) {
-    println!("{} {}", "(+)".bright_green(), element.bright_green());
+    println!("\n{}\n",
+        format!(
+            "(+) {} added", element
+        ).bright_green()
+    );
 }
 
 pub fn removed(element: &str) {
-    println!("{} {}", "(-)".bright_red(), element.bright_red());
+    println!("\n{}\n",
+        format!(
+            "(-) {} removed", element
+        ).bright_red()
+    );
 }
 
-pub fn list(index: usize, title: &str, desc: &str, done: bool) {
-    let content = &format!(
-        "[{}] {} - {}",
-        if done { "X" } else { "O" }, title, desc
+pub fn info(text: &str) {
+    println!("\n{}",
+        format!(
+            "(?) {}", text
+        ).bright_blue()
     );
-    println!("{}", content.bright_black());
+}
+
+pub fn list(text: &str) {
+    println!("• {}", text.bright_black());
+}
+
+pub fn list_item(index: usize, item: &TodoItem) {
+    println!("{}", 
+        if item.description.is_empty() {
+            format!(
+                "[{}] {}",
+                if item.done {"X"} else {"O"},
+                item.title
+            )
+        } else {
+            format!(
+                "[{}] {} - {}",
+                if item.done {"X"} else {"O"},
+                item.title,
+                item.description
+            )
+        }.bright_black()
+    );
 }

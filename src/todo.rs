@@ -9,9 +9,9 @@ static FILE_PATH: &str = "./todos.json";
 #[allow(unused)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TodoItem {
-    title: String,
-    description: String,
-    done: bool
+    pub title: String,
+    pub description: String,
+    pub done: bool
 }
 
 fn get_file() -> File {
@@ -57,9 +57,11 @@ pub fn new_todo(title: &str, description: &str) {
 }
 
 pub fn list_todos() {
+    println!();
     let file = get_file();
     let todos = get_todos(file);
     for i in 0..todos.len() {
-        out::list(i, &todos[i].title, &todos[i].description, todos[i].done);
+        out::list_item(i, &todos[i]);
     }
+    println!();
 }
