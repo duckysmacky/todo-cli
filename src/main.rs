@@ -1,19 +1,11 @@
 use std::io::stdin;
-use colored::*;
 
 mod command;
-mod status;
-
-#[allow(unused)]
-#[derive(Debug)]
-struct TodoItem {
-    title: String,
-    description: String,
-    done: bool
-}
+mod out;
+mod todo;
 
 fn main() {
-    println!("{}", "Todo list".bright_green());
+    out::title("--- Todo List ✅ ---");
 
     loop {
         let mut input = String::new();
@@ -23,7 +15,7 @@ fn main() {
         match input.next() {
             Some(val) => match val {
                 "exit" | "ext" | "close" => {
-                    status::ok("Exiting todo list!");
+                    out::ok("Exiting todo list!");
                     break;
                 },
                 _ => command::run(val, input)

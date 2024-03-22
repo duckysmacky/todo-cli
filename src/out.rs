@@ -6,7 +6,7 @@ pub fn ok(text: &str) {
     println!("{}", text.green());
 }
 
-pub fn out(text: &str) {
+pub fn output(text: &str) {
     println!("{}", text.bright_cyan());
 }
 
@@ -18,10 +18,14 @@ pub fn err(text: &str) {
     println!("{}", text.red());
 }
 
+pub fn title(text: &str) {
+    println!("{}", text.blue());
+}
+
 pub fn added(element: &str) {
-    println!("[+] {}", element.bright_green());
+    println!("{} {}", "[+]".bright_green(), element.bright_green());
 }
 
 pub fn removed(element: &str) {
-    println!("[-] {}", element.bright_red());
+    println!("{} {}", "[-]".bright_red(), element.bright_red());
 }
