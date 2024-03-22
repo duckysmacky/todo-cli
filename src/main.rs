@@ -1,6 +1,7 @@
-use std::{io::stdin, str::SplitAsciiWhitespace};
+use std::io::stdin;
 use colored::*;
 
+mod command;
 mod status;
 
 #[allow(unused)]
@@ -19,13 +20,15 @@ fn main() {
         stdin().read_line(&mut input).expect("Error reading input!");
         let mut input = input.trim().split_ascii_whitespace();
         
-        match input.next().unwrap() {
-            "exit" => {
-                status::ok("Exiting todo list!");
-                break;
-            },
-            "print" => println!("Input: {}", input.next().unwrap()),
-            _ => status::err("This command doesn't exist!")
+        match input.next() {
+            Some(val) => match val {
+                "exit" | "ext" | "close" => {
+                    status::ok("Exiting todo list!");
+                    break;
+                },
+                _ => command::run(val, input)
+            }
+            None => panic!("Error reading input!")
         }
     }
 }
