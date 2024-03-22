@@ -1,5 +1,5 @@
 use std::str::SplitAsciiWhitespace;
-use crate::{out, todo};
+use crate::{out, todo::{self, list_todos}};
 
 fn echo(mut args: SplitAsciiWhitespace<'_>) {
     match args.next() {
@@ -22,6 +22,7 @@ pub fn run(command: &str, args: SplitAsciiWhitespace<'_>) {
     match command {
         "echo" | "print" => echo(args),
         "new" | "create" => new_todo(args),
+        "list" | "todos" => list_todos(),
         _ => out::err("This command doesn't exist! Type \"help\" for full list of commands")
     }
 }

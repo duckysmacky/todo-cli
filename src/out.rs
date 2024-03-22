@@ -23,9 +23,17 @@ pub fn title(text: &str) {
 }
 
 pub fn added(element: &str) {
-    println!("{} {}", "[+]".bright_green(), element.bright_green());
+    println!("{} {}", "(+)".bright_green(), element.bright_green());
 }
 
 pub fn removed(element: &str) {
-    println!("{} {}", "[-]".bright_red(), element.bright_red());
+    println!("{} {}", "(-)".bright_red(), element.bright_red());
+}
+
+pub fn list(index: usize, title: &str, desc: &str, done: bool) {
+    let content = &format!(
+        "[{}] {} - {}",
+        if done { "X" } else { "O" }, title, desc
+    );
+    println!("{}", content.bright_black());
 }
