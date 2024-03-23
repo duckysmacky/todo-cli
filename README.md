@@ -1,6 +1,6 @@
 # TODO CLI
 
-### A simple todo cli application with the most basic functionality written on Rust
+A todo application for your command line with the most basic functionality written on Rust
 
 ## Features
  - Stores data in JSON

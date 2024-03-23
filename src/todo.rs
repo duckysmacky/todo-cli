@@ -1,5 +1,5 @@
-use std::fs::File;
-use std::io::{BufReader, Write};
+use std::{fs::File, io::Write};
+use std::io::BufReader;
 use serde::{Deserialize, Serialize};
 use crate::out;
 
@@ -31,15 +31,8 @@ fn get_todos(file: File) -> Vec<TodoItem> {
     todos
 }
 
-fn write_todos(mut file: File, todos: Vec<TodoItem>) {
-    let json = serde_json::to_string(&todos).unwrap();
-    match file.write(json.as_bytes()) {
-        Ok(_) => out::added(&format!("{:?}", todos.last().unwrap().title)),
-        Err(_) => out::err("Error writing to todos.json!")
-    }
-}
-
-pub fn new_todo(title: &str, description: &str) {
+// TODO - allow input with spaces surrounded by ""
+pub fn add(title: &str, description: &str) {
     let new_todo = TodoItem {
         title: title.to_string(),
         description: description.to_string(),
@@ -51,11 +44,15 @@ pub fn new_todo(title: &str, description: &str) {
     let mut todos = get_todos(file);
     todos.push(new_todo);
 
-    let file = File::create(FILE_PATH).unwrap();
-    write_todos(file, todos);
+    let mut file = File::create(FILE_PATH).unwrap();
+    let json = serde_json::to_string(&todos).unwrap();
+    match file.write(json.as_bytes()) {
+        Ok(_) => out::added(&format!("{:?}", todos.last().unwrap().title)),
+        Err(_) => out::err("Error writing to todos.json!")
+    }
 }
 
-pub fn list_todos() {
+pub fn list() {
     println!();
     let file = get_file();
     let todos = get_todos(file);
@@ -63,4 +60,24 @@ pub fn list_todos() {
         out::list_item(i, &todos[i]);
     }
     println!();
+}
+
+pub fn complete(title: &str) {
+    let file = get_file();
+    let todos = get_todos(file);
+
+    let mut new_todos = Vec::new();
+    for mut todo_item in todos {
+        if todo_item.title == title.to_string() {
+            todo_item.done = !todo_item.done;
+        }
+        new_todos.push(todo_item);
+    }
+
+    let mut file = File::create(FILE_PATH).unwrap();
+    let json = serde_json::to_string(&new_todos).unwrap();
+    match file.write(json.as_bytes()) {
+        Ok(_) => out::changed(&format!("{:?}", new_todos.last().unwrap().title)),
+        Err(_) => out::err("Error writing to todos.json!")
+    }
 }

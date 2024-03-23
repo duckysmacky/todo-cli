@@ -6,7 +6,8 @@ fn help() {
     println!("{}", "\nList of all commands");
     out::list("help - shows the list of all commands");
     out::list("echo | print <input> - returns input (used for debug)");
-    out::list("new | create <title> [description] - add new todo item");
+    out::list("new | create | add <title> [description] - add new todo item");
+    out::list("check | done | mark | complete <title> - mark a todo as completed/not completed");
     out::list("list | todos - list all todo items");
     out::list("exit | ext | close - exits the program\n");
 }
@@ -21,10 +22,17 @@ fn echo(mut args: SplitAsciiWhitespace<'_>) {
 fn add_todo(mut args: SplitAsciiWhitespace<'_>) {
     match args.next() {
         Some(title) => match args.next() {
-            Some(desc) => todo::new_todo(title, desc),
-            None => todo::new_todo(title, ""),
+            Some(desc) => todo::add(title, desc),
+            None => todo::add(title, ""),
         },
-        None => out::err("No title was entered! Usage: new/create <title> [description]"),
+        None => out::err("No title was entered! Usage: new | create | add <title> [description]"),
+    }
+}
+
+fn complete_todo(mut args: SplitAsciiWhitespace<'_>) {
+    match args.next() {
+        Some(title) => todo::complete(title),
+        None => out::err("No todo was entered! Usage: check | done | mark | complete <title>"),
     }
 }
 
@@ -33,7 +41,8 @@ pub fn run(command: &str, args: SplitAsciiWhitespace<'_>) {
         "help" => help(),
         "echo" | "print" => echo(args),
         "new" | "create" | "add" => add_todo(args),
-        "list" | "todos" => todo::list_todos(),
+        "check" | "done" | "mark" | "complete" => complete_todo(args),
+        "list" | "todos" => todo::list(),
         _ => out::err("This command doesn't exist! Type \"help\" for full list of commands")
     }
 }
