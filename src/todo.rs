@@ -42,6 +42,11 @@ pub fn add(title: &str, description: &str) {
     let file = get_file();
 
     let mut todos = get_todos(file);
+
+    if todos.iter().any(|item| item.title == title) { // If there is already todo with that name
+        out::err(&format!("Item \"{}\" already exists!", title));
+        return;
+    }
     todos.push(new_todo);
 
     let mut file = File::create(FILE_PATH).unwrap();
@@ -53,7 +58,6 @@ pub fn add(title: &str, description: &str) {
 }
 
 pub fn list() {
-    println!();
     let file = get_file();
     let todos = get_todos(file);
     for i in 0..todos.len() {
@@ -67,8 +71,14 @@ pub fn complete(title: &str) {
     let todos = get_todos(file);
 
     let mut new_todos = Vec::new();
+    if !todos.iter().any(|item| item.title == title) { // If there are no todos with such title
+        out::err(&format!("Item \"{}\" not found!", title));
+        return;
+    }
+
+    // TODO - make this park more efficient (instead of a for-each loop)
     for mut todo_item in todos {
-        if todo_item.title == title.to_string() {
+        if todo_item.title == title {
             todo_item.done = !todo_item.done;
         }
         new_todos.push(todo_item);

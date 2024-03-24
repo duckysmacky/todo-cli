@@ -4,22 +4,22 @@ use colored::*;
 
 use crate::todo::TodoItem;
 
-pub fn ok(text: &str) { println!("\n{}\n", text.green()); }
+pub fn ok(text: &str) { println!("{}\n", text.green()); }
 
-pub fn err(text: &str) { println!("\n{}\n", text.red()); }
+pub fn err(text: &str) { println!("{}\n", text.red()); }
 
 pub fn title(text: &str) { println!("{}", text.blue()); }
 
-pub fn output(text: &str) { println!("\n{}\n", text.bright_cyan()); }
+pub fn output(text: &str) { println!("{}\n", text.bright_cyan()); }
 
-pub fn added(element: &str) { println!("\n{}\n", format!("(+) {} added", element).bright_green()); }
+pub fn added(element: &str) { println!("{}\n", format!("(+) {} added", element).bright_green()); }
 
 // TODO - change the icon for "changed"
-pub fn changed(element: &str) { println!("\n{}\n", format!("(*) {}", element).bright_yellow()); }
+pub fn changed(element: &str) { println!("{}\n", format!("(*) {}", element).bright_yellow()); }
 
-pub fn removed(element: &str) { println!("\n{}\n", format!("(-) {} removed", element).bright_red()); }
+pub fn removed(element: &str) { println!("{}\n", format!("(-) {} removed", element).bright_red()); }
 
-pub fn info(text: &str) { println!("\n{}", format!("(?) {}", text).bright_blue()); }
+pub fn info(text: &str) { println!("{}", format!("(?) {}", text).bright_blue()); }
 
 pub fn list(text: &str) { println!("• {}", text.bright_black()); }
 
