@@ -31,63 +31,67 @@ fn get_todos(file: File) -> Vec<TodoItem> {
     todos
 }
 
+fn write_todos(todos: Vec<TodoItem>) -> Result<usize, std::io::Error>  {
+    let mut file = File::create(FILE_PATH).unwrap();
+    let json = serde_json::to_string(&todos).unwrap();
+    file.write(json.as_bytes())
+}
+
 // TODO - allow input with spaces surrounded by ""
 pub fn add(title: &str, description: &str) {
-    let new_todo = TodoItem {
-        title: title.to_string(),
-        description: description.to_string(),
-        done: false
-    };
-
-    let file = get_file();
-
-    let mut todos = get_todos(file);
+    let mut todos = get_todos(get_file());
 
     if todos.iter().any(|item| item.title == title) { // If there is already todo with that name
         out::err(&format!("Item \"{}\" already exists!", title));
         return;
     }
+
+    let new_todo = TodoItem {
+        title: title.to_string(),
+        description: description.to_string(),
+        done: false
+    };
     todos.push(new_todo);
 
-    let mut file = File::create(FILE_PATH).unwrap();
-    let json = serde_json::to_string(&todos).unwrap();
-    match file.write(json.as_bytes()) {
-        Ok(_) => out::added(&format!("{:?}", todos.last().unwrap().title)),
-        Err(_) => out::err("Error writing to todos.json!")
-    }
+    if let Ok(_) = write_todos(todos) { out::added(title); }
 }
 
 pub fn list() {
-    let file = get_file();
-    let todos = get_todos(file);
-    for i in 0..todos.len() {
-        out::list_item(i, &todos[i]);
+    let todos = get_todos(get_file());
+    if todos.len() > 0 {
+        for i in 0..todos.len() { out::list_item(i, &todos[i]); }
+    } else {
+        out::list("No todos!");
     }
     println!();
 }
 
-pub fn complete(title: &str) {
-    let file = get_file();
-    let todos = get_todos(file);
+pub fn delete(title: &str) {
+    let todos = get_todos(get_file());
 
-    let mut new_todos = Vec::new();
     if !todos.iter().any(|item| item.title == title) { // If there are no todos with such title
         out::err(&format!("Item \"{}\" not found!", title));
         return;
     }
 
-    // TODO - make this park more efficient (instead of a for-each loop)
-    for mut todo_item in todos {
-        if todo_item.title == title {
-            todo_item.done = !todo_item.done;
-        }
-        new_todos.push(todo_item);
+    let todos: Vec<TodoItem> = todos.into_iter()
+        .filter(|t| t.title != title)
+        .collect();
+
+    if let Ok(_) = write_todos(todos) { out::removed(title); }
+}
+
+pub fn complete(title: &str) {
+    let todos = get_todos(get_file());
+
+    if !todos.iter().any(|t| t.title == title) { // If there are no todos with such title
+        out::err(&format!("Item \"{}\" not found!", title));
+        return;
     }
 
-    let mut file = File::create(FILE_PATH).unwrap();
-    let json = serde_json::to_string(&new_todos).unwrap();
-    match file.write(json.as_bytes()) {
-        Ok(_) => out::changed(&format!("{:?}", new_todos.last().unwrap().title)),
-        Err(_) => out::err("Error writing to todos.json!")
-    }
+    let todos: Vec<TodoItem> = todos.into_iter()
+        .map(|mut t| {if t.title == title {t.done = !t.done}; t})
+        .collect();
+
+    if let Ok(_) = write_todos(todos) { out::changed(title); }
 }

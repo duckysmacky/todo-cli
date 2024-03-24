@@ -21,18 +21,25 @@ fn echo(mut args: SplitAsciiWhitespace<'_>) {
 
 fn add_todo(mut args: SplitAsciiWhitespace<'_>) {
     match args.next() {
-        Some(title) => match args.next() {
-            Some(desc) => todo::add(title, desc),
-            None => todo::add(title, ""),
-        },
         None => out::err("No title was entered! Usage: new | create | add <title> [description]"),
+        Some(title) => match args.next() {
+            None => todo::add(title, ""),
+            Some(desc) => todo::add(title, desc)
+        }
+    }
+}
+
+fn delete_todo(mut args: SplitAsciiWhitespace<'_>) {
+    match args.next() {
+        None => out::err("No item was entered! Usage: delete | del | remove <title>"),
+        Some(title) => todo::delete(title)
     }
 }
 
 fn complete_todo(mut args: SplitAsciiWhitespace<'_>) {
     match args.next() {
-        Some(title) => todo::complete(title),
-        None => out::err("No todo was entered! Usage: check | done | mark | complete <title>"),
+        None => out::err("No item was entered! Usage: check | done | mark | complete <title>"),
+        Some(title) => todo::complete(title)
     }
 }
 
@@ -41,6 +48,7 @@ pub fn run(command: &str, args: SplitAsciiWhitespace<'_>) {
         "help" => help(),
         "echo" | "print" => echo(args),
         "new" | "create" | "add" => add_todo(args),
+        "delete" | "del" | "remove" => delete_todo(args),
         "check" | "done" | "mark" | "complete" => complete_todo(args),
         "list" | "todos" => todo::list(),
         _ => out::err("This command doesn't exist! Type \"help\" for full list of commands")
