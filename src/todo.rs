@@ -95,3 +95,26 @@ pub fn complete(title: &str) {
 
     if let Ok(_) = write_todos(todos) { out::changed(title); }
 }
+
+pub fn edit(title: &str, element: &str, value: &str) {
+    let todos = get_todos(get_file());
+
+    if !todos.iter().any(|t| t.title == title) { // If there are no todos with such title
+        out::err(&format!("Item \"{}\" not found!", title));
+        return;
+    }
+
+    let mut changed_todos = Vec::new();
+    for mut todo in todos {
+        if todo.title == title {
+            match element {
+                "title" => todo.title = value.to_string(),
+                "description" | "desc" => todo.description = value.to_string(),
+                _ => {}
+            }
+        }
+        changed_todos.push(todo);
+    }
+
+    if let Ok(_) = write_todos(changed_todos) { out::changed(title); }
+}
