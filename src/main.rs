@@ -31,8 +31,6 @@ fn main() {
         }
         args.push(arg.clone());
 
-        println!("{:?}", args);
-
         match args[0].as_str() {
             "exit" | "ext" | "close" => {
                 out::ok("Exiting todo list!");
