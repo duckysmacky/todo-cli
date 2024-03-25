@@ -10,17 +10,35 @@ fn main() {
     loop {
         let mut input = String::new();
         stdin().read_line(&mut input).expect("Error reading input!");
-        let mut input = input.trim().split_ascii_whitespace();
-        
-        match input.next() {
-            Some(val) => match val {
-                "exit" | "ext" | "close" => {
-                    out::ok("Exiting todo list!");
-                    break;
+        let input = input.trim();
+
+        let mut args: Vec<String> = Vec::new();
+        let mut arg = String::new();
+        let mut q = false;
+        for c in input.chars() {
+            match c {
+                ' ' => { // Space separator
+                    if q {
+                        arg.push(c);
+                    } else {
+                        args.push(arg.clone());
+                        arg.clear();
+                    }
                 },
-                _ => command::run(val, input)
+                '\"' => q = !q, // Toggle read between quotations
+                _ => arg.push(c)
             }
-            None => panic!("Error reading input!")
+        }
+        args.push(arg.clone());
+
+        println!("{:?}", args);
+
+        match args[0].as_str() {
+            "exit" | "ext" | "close" => {
+                out::ok("Exiting todo list!");
+                break;
+            },
+            _ => command::run(args[0].as_str(), args[1..].iter())
         }
     }
 }

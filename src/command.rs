@@ -1,4 +1,4 @@
-use std::str::SplitAsciiWhitespace;
+use std::slice::Iter;
 
 use crate::out;
 use crate::todo;
@@ -14,14 +14,14 @@ fn help() {
     out::list("exit | ext | close - exits the program\n");
 }
 
-fn echo(mut args: SplitAsciiWhitespace<'_>) {
+fn echo(mut args: Iter<String>) {
     match args.next() {
         Some(val) => out::output(val),
         None => out::err("No text was supplied! Usage: echo <text>"),
     }
 }
 
-fn add_todo(mut args: SplitAsciiWhitespace<'_>) {
+fn add_todo(mut args: Iter<String>) {
     match args.next() {
         None => out::err("No item title was entered! Usage: new | create | add <item title> [description]"),
         Some(title) => match args.next() {
@@ -31,21 +31,21 @@ fn add_todo(mut args: SplitAsciiWhitespace<'_>) {
     }
 }
 
-fn delete_todo(mut args: SplitAsciiWhitespace<'_>) {
+fn delete_todo(mut args: Iter<String>) {
     match args.next() {
         None => out::err("No item title was entered! Usage: delete | del | remove <item title>"),
         Some(title) => todo::delete(title)
     }
 }
 
-fn complete_todo(mut args: SplitAsciiWhitespace<'_>) {
+fn complete_todo(mut args: Iter<String>) {
     match args.next() {
         None => out::err("No item title was entered! Usage: check | done | mark | complete <item title>"),
         Some(title) => todo::complete(title)
     }
 }
 
-fn edit_todo(mut args: SplitAsciiWhitespace<'_>) {
+fn edit_todo(mut args: Iter<String>) {
     match args.next() {
         None => out::err("No item title was entered! Usage: edit <item title> <title/description> <value>"),
         Some(title) => match args.next() {
@@ -58,7 +58,7 @@ fn edit_todo(mut args: SplitAsciiWhitespace<'_>) {
     }
 }
 
-pub fn run(command: &str, args: SplitAsciiWhitespace<'_>) {
+pub fn run(command: &str, args: Iter<String>) {
     match command {
         "help" => help(),
         "echo" | "print" => echo(args),
